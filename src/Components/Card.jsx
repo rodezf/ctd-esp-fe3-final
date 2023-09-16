@@ -1,22 +1,31 @@
-import React from "react";
-
+import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
+import { AppContext, actionTypes } from '../context/stateManager';
 
 const Card = ({ name, username, id }) => {
+    const { dispatch, favorites } = useContext(AppContext);
 
-  const addFav = ()=>{
-    // Aqui iria la logica para agregar la Card en el localStorage
-  }
+    const isFavorite = favorites.includes(id);
 
-  return (
-    <div className="card">
-        {/* En cada card deberan mostrar en name - username y el id */}
+    const toggleFavorite = () => {
+        if (isFavorite) {
+            dispatch({ type: actionTypes.REMOVE_FAVORITE, payload: id });
+        } else {
+            dispatch({ type: actionTypes.ADD_FAVORITE, payload: id });
+        }
+    };
 
-        {/* No debes olvidar que la Card a su vez servira como Link hacia la pagina de detalle */}
-
-        {/* Ademas deberan integrar la logica para guardar cada Card en el localStorage */}
-        <button onClick={addFav} className="favButton">Add fav</button>
-    </div>
-  );
+    return (
+        <div className="card">
+            <Link to={`/dentist/${id}`}>
+                <h3>{name}</h3>
+                <p>{username} - {id}</p>
+            </Link>
+            <button onClick={toggleFavorite} className="favButton">
+                {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
+            </button>
+        </div>
+    );
 };
 
 export default Card;
